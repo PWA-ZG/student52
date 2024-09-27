@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="stylesheet" href="main.css">
+    <meta charset="utf-8"></head>
+<body>
+
+<nav>
+    <ul>
+        <li><a href="/">All entries</a></li>
+        <li><a href="/main">Create new entry</a></li>
+    </ul>
+</nav>
+
+
+<div className="cont">
+
+    <% if (videos && videos.length > 0) { %>
+        <ul>
+            <% videos.forEach(video => { %>
+                <li id="videoBox">
+                    <video id="videoPlayer" width="650" controls muted="muted" autoplay>
+                        <source src="videos/<%= video.video_url %>" type="video/mp4" />
+                    </video>
+                    <p style="text-decoration: underline;"><%= video.username %></p>
+                    <strong><%= video.title %></strong>
+                    <strong><%= video.currentdate.toLocaleDateString(); %></strong>
+
+                </li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No videos available.</p>
+    <% } %>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="main.js"></script>
+
+
+</body>
+</html>

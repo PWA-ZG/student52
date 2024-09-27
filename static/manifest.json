@@ -1,0 +1,35 @@
+{
+  "short_name": "diary",
+  "name": "Dear Diary",
+  "lang": "en",
+  "background_color": "#687371",
+  "theme_color": "#687371",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "images/apple-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "images/manifest-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }  ],
+  "screenshots": [
+    {
+      "src": "images/manifest-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "images/manifest-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "prefer_related_applications": false
+}

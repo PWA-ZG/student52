@@ -1,0 +1,92 @@
+<!--https://github.com/davidgrcias/videorecorder/blob/main/index.html-->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <link rel="stylesheet" href="main.css">
+    <meta charset="utf-8"></head>
+<link rel="manifest" href="manifest.json">
+
+<body>
+
+
+
+<nav>
+    <ul>
+        <li><a href="/">All entries</a></li>
+        <li><a href="/main">Create new entry</a></li>
+    </ul>
+</nav>
+<h1>Dear diary...</h1>
+
+<div id="videoBox">
+
+    <video id="video" width="480" height="360" autoplay></video> <br>
+    <button id="startRecord">Start Recording</button>
+    <button id="stopRecord">Stop Recording</button>
+    <a id="downloadLink" download="video.mp4">Download Video</a>
+
+    <h1>Entry Upload Form</h1>
+
+    <form method="POST" action="/saveVideo" enctype="multipart/form-data">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required><br><br>
+
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title" required><br><br>
+
+        <label for="video">Upload Video (MP4 only):</label>
+        <input type="file" name="video" id="video" accept=".mp4" required><br><br>
+
+        <button type="submit">Upload Video</button>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+    var video = document.querySelector("#video");
+    var startRecord = document.querySelector("#startRecord");
+    var stopRecord = document.querySelector("#stopRecord");
+    var downloadLink = document.querySelector("#downloadLink");
+
+    window.onload = async function(){
+        stopRecord.style.display = "none";
+
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        video.srcObject = videoStream;
+    }
+
+    startRecord.onclick = function(){
+        startRecord.style.display = "none";
+        stopRecord.style.display = "inline";
+
+        mediaRecorder = new MediaRecorder(videoStream);
+
+        let blob = [];
+        mediaRecorder.addEventListener('dataavailable', function(e){
+            blob.push(e.data);
+        })
+
+        mediaRecorder.addEventListener('stop', function(){
+            var videoLocal = URL.createObjectURL(new Blob (blob));
+            downloadLink.href = videoLocal;
+        })
+
+        mediaRecorder.start();
+    }
+
+    stopRecord.onclick = function(){
+        mediaRecorder.stop();
+    }
+
+</script>
+<!--https://github.com/antoniamstr1/PWA/blob/master/static/sw.js-->
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.js'></script>
+
+
+
+</body>
+
+</html>

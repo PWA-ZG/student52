@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <style>body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            background-color: #cbdbf5;
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-attachment: fixed;
+        }
+
+        nav {
+            background-color: #9fafb3;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+
+
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 25px;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-weight: bold;
+            color:  #586d73;
+
+        }
+
+        .cont {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .cont ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cont li {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #videoBox {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px;
+            margin: 20px;
+            background-color: rgba(168, 182, 186,0.6);
+        }
+
+
+        video {
+            width: 100%;
+            max-width: 650px;
+            border: 1px solid #ccc;
+
+        }
+
+        strong {
+            display: block;
+            margin-bottom: 8px;
+        }</style>
+
+    <meta charset="utf-8"></head>
+
+<body>
+
+
+
+<nav>
+    <ul>
+        <li><a href="/">All entries</a></li>
+        <li><a href="/main">Create new entry</a></li>
+    </ul>
+</nav>
+<h1>Dear diary...</h1>
+
+<div id="videoBox">
+
+
+    <h1>Your today's diary has been uploaded!</h1>
+    <p>Username: <%= username %></p>
+    <p>Title: <%= title %></p>
+
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script >
+    function urlBase64ToUint8Array(base64String) {
+        const padding = "=".repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/\-/g, "+")
+            .replace(/_/g, "/");
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    async function sendPushSubscription() {
+        const publicVapidKey = 'BKXZuJixx_mc_e5_-nWKSpHr1Dn7HR4F2ljky6gh_z16y5nXqCuXqQ1jNQInEAfPZrIOqaCpa8wHIm9jwgjcSQ4';
+
+        if ('serviceWorker' in navigator) {
+            try {
+                let register = await navigator.serviceWorker.getRegistration();
+
+                if (!register) {
+                    register = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+                }
+
+                const subscription = await register.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+                });
+
+                await fetch('/subscribe', {
+                    method: 'POST',
+                    body: JSON.stringify(subscription),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                });
+
+                console.log('Push subscription successful.');
+            } catch (error) {
+                console.error('Error during push subscription:', error);
+            }
+        } else {
+            console.log('Service worker not supported.');
+        }
+    }
+
+    sendPushSubscription();
+
+
+</script>
+</body>
+
+</html>
